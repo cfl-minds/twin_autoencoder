@@ -72,7 +72,8 @@ fig, ax = plt.subplots()
 ax = plt.axes([0,0,1,1])
 
 dq = np.hstack((np.arange(history.shape[0]).reshape((history.shape[0],1)), history[:,1].reshape((history.shape[0],1)), history[:,2].reshape((history.shape[0],1))))
-np.savetxt('fig13.csv', dq, delimiter=',', header='iteration,train,valid')
+#np.savetxt('fig13.csv', dq, delimiter=',', header='iteration,train,valid')
+
 plt.plot(np.arange(history.shape[0]), history[:,1], label='train')
 plt.plot(np.arange(history.shape[0]), history[:,2], label='valid')
 #plt.yscale('log')
