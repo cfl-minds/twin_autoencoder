@@ -80,7 +80,7 @@ def io_conv_2D_transp(in_layer,
     return out_layer
 
 
-#######return constant tensor with the same shape as input
+### Return a constant tensor with the same shape as input
 def constant_layer(in_layer):
     return tf.ones_like(in_layer)
 
@@ -104,7 +104,7 @@ def io_concat_pad(in_layer_1,
 
     return out_layer
 
-
+### I/O zero-pad
 def io_pad(in_layer_1,
            in_layer_2):
 
@@ -198,22 +198,22 @@ def Dual_AE(train_im,
 
     ##################### Decoder shape begins ##################
     # 1 transpose convolution + 2 convolutions
-    pre6  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre6  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     up6   = io_pad(pre6, conv4)
     conv6 = io_conv_2D(up6, seed, n_filters_initial*(2**3), kernel_size)
     conv6 = io_conv_2D(conv6, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     up7   = io_pad(pre7, conv3)
     conv7 = io_conv_2D(up7, seed, n_filters_initial*(2**2), kernel_size)
     conv7 = io_conv_2D(conv7, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     up8   = io_pad(pre8, conv2)
     conv8 = io_conv_2D(up8, seed, n_filters_initial*(2**1), kernel_size)
     conv8 = io_conv_2D(conv8, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     up9   = io_pad(pre9, conv1)
     conv9 = io_conv_2D(up9, seed, n_filters_initial*(2**0), kernel_size)
     conv9 = io_conv_2D(conv9, seed, n_filters_initial*(2**0), kernel_size)
@@ -222,25 +222,25 @@ def Dual_AE(train_im,
 
     ##################### Decoder flow begins ##################
     # 1 transpose convolution and 2 convolutions
-    pre16  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre16  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     cnst_4 = Lambda(constant_layer)(conv4)
     up16   = io_concat_pad(pre16, cnst_4, 3)
     conv16 = io_conv_2D(up16, seed, n_filters_initial*(2**3), kernel_size)
     conv16 = io_conv_2D(conv16, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution and 2 convolutions
-    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     cnst_3 = Lambda(constant_layer)(conv3)
     up17   = io_concat_pad(pre17,cnst_3, 3)
     conv17 = io_conv_2D(up17, seed, n_filters_initial*(2**2), kernel_size)
     conv17 = io_conv_2D(conv17, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution and 2 convolutions
-    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     cnst_2 = Lambda(constant_layer)(conv2)
     up18   = io_concat_pad(pre18, cnst_2, 3)
     conv18 = io_conv_2D(up18, seed, n_filters_initial*(2**1), kernel_size)
     conv18 = io_conv_2D(conv18, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution and 2 convolutions
-    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     cnst_1 = Lambda(constant_layer)(conv1)
     up19   = io_concat_pad(pre19, cnst_1, 3)
     conv19 = io_conv_2D(up19, seed, n_filters_initial*(2**0), kernel_size)
@@ -282,6 +282,7 @@ def Dual_AE(train_im,
                                 callbacks       = [early, check])
 
     return(model, train_model)
+
 
 ## U_Dual_AE holds skip connections from encoder to flow decoder
 def U_Dual_AE(train_im,
@@ -331,22 +332,22 @@ def U_Dual_AE(train_im,
 
     ##################### Decoder shape begins ##################
     # 1 transpose convolution + 2 convolutions
-    pre6  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre6  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     up6   = io_pad(pre6, conv4)
     conv6 = io_conv_2D(up6, seed, n_filters_initial*(2**3), kernel_size)
     conv6 = io_conv_2D(conv6, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     up7   = io_pad(pre7, conv3)
     conv7 = io_conv_2D(up7, seed, n_filters_initial*(2**2), kernel_size)
     conv7 = io_conv_2D(conv7, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     up8   = io_pad(pre8, conv2)
     conv8 = io_conv_2D(up8, seed, n_filters_initial*(2**1), kernel_size)
     conv8 = io_conv_2D(conv8, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     up9   = io_pad(pre9, conv1)
     conv9 = io_conv_2D(up9, seed, n_filters_initial*(2**0), kernel_size)
     conv9 = io_conv_2D(conv9, seed, n_filters_initial*(2**0), kernel_size)
@@ -354,22 +355,22 @@ def U_Dual_AE(train_im,
 
     ##################### Decoder flow begins ##################
     # 1 transpose convolution and concat + 2 convolutions
-    pre16  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre16  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     up16   = io_concat_pad(pre16, conv4, 3)
     conv16 = io_conv_2D(up16, seed, n_filters_initial*(2**3), kernel_size)
     conv16 = io_conv_2D(conv16, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     up17   = io_concat_pad(pre17, conv3, 3)
     conv17 = io_conv_2D(up17, seed, n_filters_initial*(2**2), kernel_size)
     conv17 = io_conv_2D(conv17, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     up18   = io_concat_pad(pre18, conv2, 3)
     conv18 = io_conv_2D(up18, seed, n_filters_initial*(2**1), kernel_size)
     conv18 = io_conv_2D(conv18, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     up19   = io_concat_pad(pre19, conv1, 3)
     conv19 = io_conv_2D(up19, seed, n_filters_initial*(2**0), kernel_size)
     conv19 = io_conv_2D(conv19, seed, n_filters_initial*(2**0), kernel_size)
@@ -409,7 +410,8 @@ def U_Dual_AE(train_im,
 
     return(model, train_model)
 
-## Twin_AE holds skip connecitons from shape decoder to flow decoder
+
+### Twin_AE holds skip connecitons from shape decoder to flow decoder
 def Twin_AE5(train_im,
             train_sol,
             valid_im,
@@ -457,22 +459,22 @@ def Twin_AE5(train_im,
 
     ##################### Decoder shape begins ##################
     # 1 transpose convolution + 2 convolutions
-    pre6  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre6  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     up6   = io_pad(pre6, conv4)
     conv6 = io_conv_2D(up6, seed, n_filters_initial*(2**3), kernel_size)
     conv6 = io_conv_2D(conv6, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     up7   = io_pad(pre7, conv3)
     conv7 = io_conv_2D(up7, seed, n_filters_initial*(2**2), kernel_size)
     conv7 = io_conv_2D(conv7, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     up8   = io_pad(pre8, conv2)
     conv8 = io_conv_2D(up8, seed, n_filters_initial*(2**1), kernel_size)
     conv8 = io_conv_2D(conv8, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     up9   = io_pad(pre9, conv1)
     conv9 = io_conv_2D(up9, seed, n_filters_initial*(2**0), kernel_size)
     conv9 = io_conv_2D(conv9, seed, n_filters_initial*(2**0), kernel_size)
@@ -481,25 +483,25 @@ def Twin_AE5(train_im,
 
     ##################### Decoder flow begins ##################
     # 1 transpose convolution and concat + 2 convolutions
-    pre16  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre16  = io_conv_2D_transp(conv5, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     up16   = io_concat_pad(pre16, conv6, 3)
     #up16   = io_concat_pad(pre16, up6, 3)
     conv16 = io_conv_2D(up16, seed, n_filters_initial*(2**3), kernel_size)
     conv16 = io_conv_2D(conv16, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     up17   = io_concat_pad(pre17, conv7, 3)
     #up17   = io_concat_pad(pre17, up7, 3)
     conv17 = io_conv_2D(up17, seed, n_filters_initial*(2**2), kernel_size)
     conv17 = io_conv_2D(conv17, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     up18   = io_concat_pad(pre18, conv8, 3)
     #up18   = io_concat_pad(pre18, up8, 3)
     conv18 = io_conv_2D(up18, seed, n_filters_initial*(2**1), kernel_size)
     conv18 = io_conv_2D(conv18, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     up19   = io_concat_pad(pre19, conv9, 3)
     #up19   = io_concat_pad(pre19, up9, 3)
     conv19 = io_conv_2D(up19, seed, n_filters_initial*(2**0), kernel_size)
@@ -590,28 +592,28 @@ def Twin_AE6(train_im,
 
 
     ##################### Decoder shape begins ##################
-    pre66  = io_conv_2D_transp(conv55, n_filters_initial*(2**4), 2, 2, seed=seed)
+    pre66  = io_conv_2D_transp(conv55, n_filters_initial*(2**4), kernel_transpose_size, stride_size, seed=seed)
     up66   = io_pad(pre66, conv5)
     conv66 = io_conv_2D(up66, seed, n_filters_initial*(2**4), kernel_size)
     conv66 = io_conv_2D(conv66, seed, n_filters_initial*(2**4), kernel_size)
 
     # 1 transpose convolution + 2 convolutions
-    pre6  = io_conv_2D_transp(conv66, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre6  = io_conv_2D_transp(conv66, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     up6   = io_pad(pre6, conv4)
     conv6 = io_conv_2D(up6, seed, n_filters_initial*(2**3), kernel_size)
     conv6 = io_conv_2D(conv6, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre7  = io_conv_2D_transp(conv6 , n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     up7   = io_pad(pre7, conv3)
     conv7 = io_conv_2D(up7, seed, n_filters_initial*(2**2), kernel_size)
     conv7 = io_conv_2D(conv7, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre8  = io_conv_2D_transp(conv7, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     up8   = io_pad(pre8, conv2)
     conv8 = io_conv_2D(up8, seed, n_filters_initial*(2**1), kernel_size)
     conv8 = io_conv_2D(conv8, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution + 2 convolutions
-    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre9  = io_conv_2D_transp(conv8, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     up9   = io_pad(pre9, conv1) 
     conv9 = io_conv_2D(up9, seed, n_filters_initial*(2**0), kernel_size)
     conv9 = io_conv_2D(conv9, seed, n_filters_initial*(2**0), kernel_size)
@@ -619,28 +621,28 @@ def Twin_AE6(train_im,
 
 
     ##################### Decoder flow begins ##################
-    pre166  = io_conv_2D_transp(conv55, n_filters_initial*(2**4), 2, 2, seed=seed)
+    pre166  = io_conv_2D_transp(conv55, n_filters_initial*(2**4), kernel_transpose_size, stride_size, seed=seed)
     up166   = io_pad(pre166, conv66)
     conv166 = io_conv_2D(up166, seed, n_filters_initial*(2**4), kernel_size)
     conv166 = io_conv_2D(conv166, seed, n_filters_initial*(2**4), kernel_size)
 
     # 1 transpose convolution and concat + 2 convolutions
-    pre16  = io_conv_2D_transp(conv166, n_filters_initial*(2**3), 2, 2, seed=seed)
+    pre16  = io_conv_2D_transp(conv166, n_filters_initial*(2**3), kernel_transpose_size, stride_size, seed=seed)
     up16   = io_concat_pad(pre16, conv6, 3)
     conv16 = io_conv_2D(up16, seed, n_filters_initial*(2**3), kernel_size)
     conv16 = io_conv_2D(conv16, seed, n_filters_initial*(2**3), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), 2, 2, seed=seed)
+    pre17  = io_conv_2D_transp(conv16, n_filters_initial*(2**2), kernel_transpose_size, stride_size, seed=seed)
     up17   = io_concat_pad(pre17, conv7, 3)
     conv17 = io_conv_2D(up17, seed, n_filters_initial*(2**2), kernel_size)
     conv17 = io_conv_2D(conv17, seed, n_filters_initial*(2**2), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), 2, 2, seed=seed)
+    pre18  = io_conv_2D_transp(conv17, n_filters_initial*(2**1), kernel_transpose_size, stride_size, seed=seed)
     up18   = io_concat_pad(pre18, conv8, 3)
     conv18 = io_conv_2D(up18, seed, n_filters_initial*(2**1), kernel_size)
     conv18 = io_conv_2D(conv18, seed, n_filters_initial*(2**1), kernel_size)
     # 1 transpose convolution and concat + 2 convolutions
-    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), 2, 2, seed=seed)
+    pre19  = io_conv_2D_transp(conv18, n_filters_initial*(2**0), kernel_transpose_size, stride_size, seed=seed)
     up19   = io_concat_pad(pre19, conv9, 3)
     conv19 = io_conv_2D(up19, seed, n_filters_initial*(2**0), kernel_size)
     conv19 = io_conv_2D(conv19, seed, n_filters_initial*(2**0), kernel_size)

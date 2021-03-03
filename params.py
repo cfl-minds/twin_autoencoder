@@ -19,14 +19,6 @@ u_dir_test            = dataset_dir+'/u_test'
 v_dir_test            = dataset_dir+'/v_test'
 p_dir_test            = dataset_dir+'/p_test'
 
-#input_dir             = shape_dir
-#sol_dir               = u_dir
-#input_dir_test        = shape_dir_test
-#sol_dir_test          = velocity_dir_test
-# Model directories
-model_dir             = './'
-model_h5              = model_dir+'best_0.1.h5'
-model_json            = model_dir+'model.json'
 
 # Image data
 img_width             = 1500

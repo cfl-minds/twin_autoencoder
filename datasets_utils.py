@@ -99,7 +99,7 @@ def load_and_reshape_img(img_name, height, width, color):
                                  anti_aliasing=True,
                                  #preserve_range=True,
                                  #order=0,
-                                 mode='edge')
+                                 mode='constant')
 
     # Handle color
     if (color == 'bw'):
@@ -190,32 +190,7 @@ def plot_accuracy_and_loss(train_model, direction):
     return np.min(valid_loss)
 
 ### ************************************************
-### Save keras model to file
-def save_keras_model(model, i):
-
-    model.save('model_{}.h5'.format(i))
-
-### ************************************************
-### Save keras model to file
-def evaluate_model_score(model, imgs, sols):
-    score = model.evaluate(imgs, sols)
-    print('Test accuracy:', score)
-
-    return score
-
-
-### ************************************************
 ### Predict images from model and compute errors
-def rel_err(x, y, seuil):
-
-    return int(abs(x-y)/(y+1e-6) > seuil)
-
-def fail_count(pred, sol, seuil):
-    pred = pred.reshape((pred.shape[0]*pred.shape[1]*pred.shape[2],))
-    sol = sol.reshape((sol.shape[0]*sol.shape[1]*sol.shape[2],))
-    arr = np.array([rel_err(pred[i], sol[i], seuil) for i in range(len(pred))])
-
-    return np.sum(arr)/len(arr)
 
 def predict_images(model, imgs, sols):
     # Get img shape
@@ -300,25 +275,3 @@ def show_image_prediction(shape, ref_img, predicted_img, error_img, i, channel):
         plt.close()
 
 
-
-
-    
-### ************************************************
-### Load model
-def load_h5_model(model_h5, i):
-    
-
-    if (not os.path.isfile(model_h5)):
-        print('Could not find model file')
-        exit()
-
-    model = load_model(model_h5, custom_objects={'loss': custom_loss(i)})
-
-    return model
-
-### ************************************************
-### Sort data in alphanumeric order
-def sorted_alphanumeric(data):
-    convert = lambda text: int(text) if text.isdigit() else text.lower()
-    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
-    return sorted(data, key=alphanum_key)
