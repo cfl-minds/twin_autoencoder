@@ -122,11 +122,16 @@ for n_filters_initial in [12]:
 			# Make prediction and compute error
 			
 			start     = time.time()
-			mse_train = predict_images(model, imgs_train, sols_train)
+			rel_err_train, mse_train = predict_error(model, imgs_train, sols_train)
+			pd.DataFrame(rel_err_train).to_csv(results_dir + '/rel_err_train.csv')
 			pd.DataFrame(mse_train).to_csv(results_dir + '/mse_train.csv')
-			mse_valid = predict_images(model, imgs_valid, sols_valid)
+			
+			rel_err_valid, mse_valid = predict_error(model, imgs_valid, sols_valid)
+			pd.DataFrame(rel_err_valid).to_csv(results_dir + '/rel_err_valid.csv')
 			pd.DataFrame(mse_valid).to_csv(results_dir + '/mse_valid.csv')
-			mse_test  = predict_images(model, imgs_tests, sols_tests)
+			
+			rel_err_test, mse_test   = predict_error(model, imgs_tests, sols_tests)
+			pd.DataFrame(rel_err_test).to_csv(results_dir + '/rel_err_test.csv')
 			pd.DataFrame(mse_test).to_csv(results_dir + '/mse_test.csv')
 
 			end       = time.time()

@@ -192,7 +192,7 @@ def plot_accuracy_and_loss(train_model, direction):
 ### ************************************************
 ### Predict images from model and compute errors
 
-def predict_images(model, imgs, sols):
+def predict_error(model, imgs, sols):
     # Get img shape
     h = sols.shape[1]
     w = sols.shape[2]
@@ -201,6 +201,7 @@ def predict_images(model, imgs, sols):
     # Various stuff
     n_imgs    = len(imgs)
     predict   = np.zeros([n_imgs,h,w,c],dtype=np.float16)
+    rel_err   = np.zeros((n_imgs,4),dtype=np.float16)
     mse       = np.zeros((n_imgs,2),dtype=np.float16)
 
     # Predict
@@ -208,9 +209,31 @@ def predict_images(model, imgs, sols):
         img                = imgs[i,:,:,:]
         img                = img.reshape(1,h,w,1)
         predict[i,:,:,:]   = model.predict(img)
-        error               = np.abs(predict[i,:,:,:]-sols[i,:,:,:])
+        error              = np.abs(predict[i,:,:,:]-sols[i,:,:,:])
+        
+        rel_err[i, :]      = np.mean(error[35:65,35:80,:] / (sols[i,35:65,35:80,:] + 1e-3), axis=(0,1))
         mse[i, :]          = [np.mean(np.square(error[i,:,:,0])), np.mean(np.square(error[i,:,:,1:]))]
-    return mse
+    return rel_err , mse
+
+def predict_images(model, imgs, sols):
+    # Get img shape
+    h = sols.shape[1]
+    w = sols.shape[2]
+    c = sols.shape[3]
+
+    # Various stuff
+    n_imgs    = len(imgs)
+    predict   = np.zeros([n_imgs,h,w,c],dtype=np.float32)
+    error     = np.zeros([n_imgs,h,w,c],dtype=np.float32)
+
+    # Predict
+    for i in range(0, n_imgs):
+        img                = imgs[i,:,:,:]
+        img                = img.reshape(1,h,w,1)
+        predict[i,:,:,:]   = model.predict(img)
+        error[i,:,:,:]      = np.abs(predict[i,:,:,:]-sols[i,:,:,:])
+
+    return predict, error
 
 ### ************************************************
 ### Show an image prediction along with exact image and error
@@ -219,8 +242,6 @@ def show_image_prediction(shape, ref_img, predicted_img, error_img, i, channel):
 
     if channel == 0:
         filename = 'predictions/predicted_shape_{}'.format(i)
-        
-        #filename = 'predictions/' +sorted(os.listdir('outliers/Data/shapes'))[i][:-4]+'_shape_'
 
         fig, ax = plt.subplots()
         ax = plt.axes([0,0,1,1])

@@ -7,9 +7,9 @@ from pandas import read_csv as read
 import matplotlib.pyplot as plt
 
 #####import data
-train = read('mse_train.csv')
-valid = read('mse_valid.csv')
-test  = read('mse_test.csv')
+train = read('Depth5/mse_train.csv')
+valid = read('Depth5/mse_valid.csv')
+test  = read('Depth5/mse_test.csv')
 
 train.columns = ['index', 'e_s', 'e_f']
 valid.columns = ['index', 'e_s', 'e_f']
@@ -83,7 +83,7 @@ plt.xlabel('iteration')
 plt.ylabel('NLL')
 plt.legend(loc='upper right')
 
-plt.savefig('nnl_iter.png', dpi=300, bbox_inches='tight',pad_inches = 0)
+plt.savefig('images/nnl_iter.png', dpi=300, bbox_inches='tight',pad_inches = 0)
 plt.close()
 ########
 index = np.argmin(history[:,2])#history.shape[0]-1#
@@ -109,7 +109,7 @@ plt.ylim(0,1.1e-4)
 plt.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
 plt.xlabel('MSE_reconstruction')
 plt.ylabel('MSE_flow')
-plt.savefig('err_interval.png', dpi=300, bbox_inches='tight',pad_inches = 0)
+plt.savefig('/images/err_interval.png', dpi=300, bbox_inches='tight',pad_inches = 0)
 plt.close()
 
 

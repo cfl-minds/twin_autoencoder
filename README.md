@@ -1,7 +1,8 @@
 # twin_decoder
-This is the repository for the article "A twin-decoder structure for incompressible laminar flow reconstruction with uncertainty estimation around 2D obstacles".![architecture](./images/architecture.png)
+This is the repository for the article "A twin-decoder structure for incompressible laminar flow reconstruction with uncertainty estimation around 2D obstacles"
+![architecture](./images/architecture.png)
 
-The entire project are validated in **Ubuntu 20.04**.
+The entire project are has been in **Ubuntu 20.04**.
 ## Package requisitions
 - **Python** = 3.6.9
 - **Tensorflow** = 2.0
@@ -11,8 +12,10 @@ The entire project are validated in **Ubuntu 20.04**.
 - **network_utils** : layers and models used in the article;
 - **params** : directions, network hyper-parameters etc..
 - **train_predict** : load data set and train a model, save the learning history and the mean squared error over the whole data set;
+- **predict_images**: visualization of the reconstructed input and the flow prediction;
+- **predict_error**: calculation of the relative error
 - **mistake_minimization** : an independent script find the optimal threshold of the reconstruction error for the qualitative method;
-- **nll_minimization** : an independent script solving problem (10) for the quantitative trust level method;
+- **nll_minimization** : an independent script solving the linear regression problem for the quantitative trust level method;
 - **Depth5** : results direction saving the model, and the mean squared errors in csv format.
 
 ## Model training
