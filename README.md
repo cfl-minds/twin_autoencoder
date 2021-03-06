@@ -5,7 +5,7 @@ This is the repository for the article "A twin-decoder structure for incompressi
 The entire project are has been in **Ubuntu 20.04**.
 ## Package requisitions
 - **Python** = 3.6.9
-- **Tensorflow** = 2.0
+- **Tensorflow** = 2.0.0
 
 ## Structure of the repository
 - **dataset_utils** : general functions, including data pre-processing, results plotting etc..
