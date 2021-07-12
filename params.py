@@ -4,7 +4,6 @@ import logging
 import tensorflow as tf
 import numpy      as np
 import random     as rn
-import keras      as k
 
 
 # Data directories

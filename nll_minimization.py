@@ -1,12 +1,10 @@
 import autograd.numpy as np
 from autograd import grad, jacobian
-#from autograd.scipy.stats import norm
 from scipy.optimize import minimize
-#import statsmodels.api as sm
 from pandas import read_csv as read
 import matplotlib.pyplot as plt
 
-#####import data
+### import data
 train = read('Depth5/mse_train.csv')
 valid = read('Depth5/mse_valid.csv')
 test  = read('Depth5/mse_test.csv')
@@ -15,8 +13,7 @@ train.columns = ['index', 'e_s', 'e_f']
 valid.columns = ['index', 'e_s', 'e_f']
 test.columns  = ['index', 'e_s', 'e_f']
 
-#print(train.head())
-
+### compute the negative log-likelihood
 def NLL(theta):
     
     a = theta[0]
@@ -28,7 +25,8 @@ def NLL(theta):
     
     ll = -N/2 * np.log(2*np.pi) - np.sum(np.log(sigma)) - 0.5 * np.sum(((e_f-mu)/ sigma)**2)
     return -ll/N
-    
+
+### compute the negative log-likelihood on the validation set    
 def NLL_valid(theta):
     
     a = theta[0]
@@ -41,25 +39,29 @@ def NLL_valid(theta):
     ll = - N_v/2 * np.log(2*np.pi) - np.sum(np.log(sigma)) - 0.5 * np.sum(((e_f_v-mu)/ sigma)**2)
     return -ll/N_v
 
+### save the optimization history
+def callback(x):
+    train_loss = NLL(x)
+    valid_loss = NLL_valid(x)
+    history.append(np.asarray([x, train_loss, valid_loss]))
+    
+    
 tol  = 5000000
 tol2 = 5000000
-
+### data for training and validation
 e_s  = np.asarray(train.e_s[ (train.e_f < tol) & (train.e_s < tol2) ])
 e_f  = np.asarray(train.e_f[ (train.e_f < tol) & (train.e_s < tol2) ])
 N    = len(e_s)
 e_s_v  = np.asarray(valid.e_s[ (valid.e_f < tol) & ( valid.e_s < tol2) ])
 e_f_v  = np.asarray(valid.e_f[ (valid.e_f < tol) & ( valid.e_s < tol2) ])
 N_v    = len(e_s_v)
-
 print(N, N_v)
 
-def callback(x):
-    train_loss = NLL(x)
-    valid_loss = NLL_valid(x)
-    history.append(np.asarray([x, train_loss, valid_loss]))
 
-jacobian_  = jacobian(NLL)
-theta_start = np.array([0.1, 0, 0.1])
+
+### send the data and NLL to scipy.optimize.minimize
+jacobian_  = jacobian(NLL)## gradient of the objective function
+theta_start = np.array([0.1, 0, 0.1])## initial value for optimizing (a,b,c)
 history = []
 res1 = minimize(NLL, theta_start, method = 'BFGS', options={'disp': False, 'maxiter': 200}, jac=jacobian_, callback=callback)
 history = np.reshape(history, (res1.nit, 3))
@@ -68,18 +70,16 @@ print("Convergence Achieved: ", res1.success)
 print("Number of Function Evaluations: ", res1.nfev)
 
 
+
+### plot minimization history
 fig, ax = plt.subplots()
 ax = plt.axes([0,0,1,1])
 
 dq = np.hstack((np.arange(history.shape[0]).reshape((history.shape[0],1)), history[:,1].reshape((history.shape[0],1)), history[:,2].reshape((history.shape[0],1))))
-#np.savetxt('fig13.csv', dq, delimiter=',', header='iteration,train,valid')
 
 plt.plot(np.arange(history.shape[0]), history[:,1], label='train')
 plt.plot(np.arange(history.shape[0]), history[:,2], label='valid')
-#plt.yscale('log')
 plt.grid()
-#plt.xlim(0,6e-4)
-#plt.ylim(0,1.5e-4)
 plt.xlabel('iteration')
 plt.ylabel('NLL')
 plt.legend(loc='upper right')
@@ -94,7 +94,7 @@ print('Calibration finished, the values of (a,b,c) is ', a,b,c, ' !')
 
 
 
-################## The scatter plot 
+################## The scatter plot ############
 es        = np.arange(0, 2e-4, 1e-5)#np.array([0,4e-5,8e-5,1.2e-4,1.6e-4, 2e-4])
 mu        = a * es + b
 one_sigma = c * es
@@ -110,7 +110,7 @@ plt.ylim(0,1.1e-4)
 plt.ticklabel_format(axis="both", style="sci", scilimits=(0, 0))
 plt.xlabel('MSE_reconstruction')
 plt.ylabel('MSE_flow')
-plt.savefig('/images/err_interval.png', dpi=300, bbox_inches='tight',pad_inches = 0)
+plt.savefig('images/err_interval.png', dpi=300, bbox_inches='tight',pad_inches = 0)
 plt.close()
 
 

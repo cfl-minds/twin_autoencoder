@@ -1,6 +1,5 @@
 # Generic imports
 import os
-import re
 import sys
 import time
 import math
@@ -151,22 +150,6 @@ def load_img_dataset(my_dir, downscaling, color):
 
     return imgs, n_imgs, height, width, n_channels
 
-### ************************************************
-### Plot relative errors
-def plot_relative_errors(predict, error, filename):
-    save = np.transpose(predict[:,0])
-    if (predict.shape[1] == 2):
-        save = np.column_stack((save, np.transpose(predict[:,1])))
-    save = np.column_stack((save, np.transpose(error[:,0])))
-    if (error.shape[1] == 2):
-        save = np.column_stack((save, np.transpose(error[:,1])))
-
-    np.savetxt(filename, save)
-
-    plt.scatter(predict[:,0],error[:,0],c=error[:,0],s=50,cmap='viridis')
-    plt.colorbar()
-    plt.savefig(filename+'.png')
-    plt.show()
 
 ### ************************************************
 ### Plot accuracy and loss as a function of epochs
@@ -259,7 +242,6 @@ def show_image_prediction(shape, ref_img, predicted_img, error_img, i, channel):
     
         fig, ax = plt.subplots()
         ax = plt.axes([0,0,1,1])
-        #plt.imshow(error_img[:,:,channel]/np.amax(error_img[:,:,channel]), interpolation='spline16', cmap='gray')
         plt.imshow(error_img[:,:,channel], interpolation='spline16', cmap='gray')
         print(np.max(error_img[:,:,channel]))
         plt.axis('off')

@@ -1,14 +1,9 @@
-import numpy             as np
-import pandas            as pd
-import matplotlib.pyplot as plt
-import keras.backend     as K
-from   os                import mkdir
-from   scipy.stats       import pearsonr
-import pickle
+### obtain the mean squared error or pixel-wise relative error on some shapes. 
 
+import numpy             as np
 # Custom imports
 from params         import *
-from datasets_utilsx import *
+from datasets_utils import *
 
 
 model = load_model('Depth5/best_0.1_12_2.h5', custom_objects={'tf': tf}, compile=False)
@@ -39,14 +34,16 @@ sols = np.concatenate((imgs, u_sols, v_sols, p_sols), axis=-1)
 
 del u_sols, v_sols, p_sols
 
-
-# Make prediction and compute error
-predicted_imgs, error = predict_images(model, imgs, sols)
+### get MSE of the test set
 # e3, mse = predict_error(model, imgs, sols)
 # print(np.mean(e3, axis=0))
 # print(np.mean(mse, axis=0))
 # np.savetxt('e3.csv', e3, delimiter=',', header='shapes,u,v,p')
 # np.savetxt('mse.csv',mse, delimiter=',', header='shapes,flow')
+
+
+# Make prediction and compute error on several shapes
+predicted_imgs, error = predict_images(model, imgs, sols)
 # Output a prediction example
 for i in range(n_imgs):
      im = i

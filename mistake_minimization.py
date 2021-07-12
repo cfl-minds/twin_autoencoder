@@ -4,9 +4,10 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
 
-##### give a tolerance on the flow prediction MSE
-e_f_star = 5e-5
+e_f_star = 5e-5# give a tolerance on the mean squared error of flow prediction
 
+
+### load MSE on the training/validation/test set
 mse_tr = pd.read_csv('Depth5/mse_train.csv')
 mse_tr.columns = ['index', 'shapes', 'flow']
 
@@ -16,7 +17,7 @@ mse_va.columns = ['index', 'shapes', 'flow']
 mse_te = pd.read_csv('Depth5/mse_test.csv')
 mse_te.columns = ['index', 'shapes', 'flow']
 
-###############################
+### search the optimal threshold e_s_star given that tolerance e_f_star
 f_tr = list()
 f_va = list()
 
@@ -45,13 +46,13 @@ plt.legend(loc='upper right')
 plt.savefig('images/mistake_rate.png', dpi=300, bbox_inches='tight',pad_inches = 0)
 
 
-############################
 e_s_star = interval[np.argmin(f_va)]
 print('Given the tolerance e_f* = {}, '.format(e_f_star), 'the optimal threshold is {}. '.format(e_s_star), 'Mistake rate on the validation set is {}. '.format(f_va[np.argmin(f_va)]))
-# print((( mse_va.shapes < e_s_star ) & ( mse_va.flow > e_f_star)).sum() / ( mse_va.shapes < e_s_star ).sum())
-# print((( mse_va.shapes > e_s_star ) & ( mse_va.flow < e_f_star)).sum()/ ( mse_va.shapes > e_s_star ).sum())
-###########################
+##################################
 
+
+
+### try multiple tolerance e_f_star, and see how the optimal threshold e_s_star changes
 results = dict()
 for e_f_star in np.arange(1e-5, 1e-4, 1e-5):
     f_tr = list()
@@ -67,13 +68,6 @@ for e_f_star in np.arange(1e-5, 1e-4, 1e-5):
         FP = (( mse_va.shapes > e_s ) & ( mse_va.flow < e_f_star)).sum()
         f_va.append(( FN + FP ) / len(mse_va))
 
-    #plt.plot(np.arange(1e-5, 1.5e-4, 1e-6), f_tr, label='train')
-    #plt.plot(np.arange(1e-5, 1.5e-4, 1e-6), f_va, label='valid')
-    #plt.grid()
-    #plt.xlabel('e_s_star')
-    #plt.ylabel('false classification rate')
-    #plt.legend(loc='upper right')
-    #plt.savefig('e:/Uncert_U_net/256_16_3/zoom_false_calssifation_rate.png')
 
     index = np.argmin(f_va)
     e_s_star = interval[index]
@@ -97,6 +91,7 @@ plt.title('e_s_star as a function of e_f_star')
 plt.savefig('images/threshold_versus_tolerance.png', dpi=300, bbox_inches='tight',pad_inches = 0)
 
 
+### see how the mistake rate changes versus the tolerance e_f_star
 fig = plt.figure()
 ax = plt.axes([0,0,1,1])
 plt.plot(all_e_f, np.array(list(results.values()))[:,1], label='train')

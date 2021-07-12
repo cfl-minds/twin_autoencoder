@@ -1,6 +1,5 @@
 # Import stuff
 import sys
-import math
 import keras
 import tensorflow as tf
 

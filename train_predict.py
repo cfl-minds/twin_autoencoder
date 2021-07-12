@@ -1,8 +1,6 @@
 # Generic imports
 import numpy             as np
 import pandas            as pd
-import matplotlib.pyplot as plt
-import keras.backend     as K
 from   os                import mkdir
 
 # Custom imports
